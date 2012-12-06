@@ -1,16 +1,122 @@
-    <!doctype html>
-    <html ng-app="project">
-    <head>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-resource.min.js">
-        </script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <script src="project.js"></script>
-        <script src="mongolab.js"></script>
-    </head>
-    <body style="padding:12px;">
-        <h2>JavaScript Projects</h2>
-        <div ng-view></div>
-    </body>
-    </html> 
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  img{ height: 100px; float: left; }
+  </style>
+  
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  
+
+  <style type="text/css">
+    img {
+      height: auto;
+      max-width: 75px;
+    }
+  </style>
+
+  <script>
+  	$.support.cors = true;
+    function query(){
+      $('#images').empty();
+      $.getJSON(
+      "https://www.googleapis.com/shopping/search/v1/public/products?callback=?",
+      {
+          key: "AIzaSyBSEwl6Ch4Wm8OIhbT6y9rWjVeAwwU-WiA", 
+          country: "US", 
+          q: document.productInfo.isbn.value, 
+          alt: "json", 
+          rankBy: "price:" + document.productInfo.sort.value
+      },
+      function(data) {
+          $.each(data.items, function(i, item){
+              
+              if (item.product.images.length > 0) // sanity check
+              {
+                  link = item.product.images[0]['link']; // cache value
+                  var img = $("<img/>").attr("src", link);
+                  picture = $("<a/>").attr({href: link, title: "Courtesy of Flicker"}).append(img);
+                  $("<td/>").attr({class: "span2"}).append(picture).appendTo("tr:last");
+                  $('<a><div class="btn delete">x</div></a>').appendTo("tr:last");
+                  $('.delete').click(function(e) {
+  e.preventDefault(); // don't follow the link
+  $(this).closest('tr').remove(); // credits goes to MrKurt for use of closest()
+});
+              }
+              else
+              {
+                $("<td/>").attr({class: "span2"}).appendTo("tr:last");
+              }
+              if (item.product.inventories.length > 0)
+              {
+                linkTo = item.product.link;
+                price = item.product.inventories[0]['price'];
+                thing = item.product.title;
+                stock = item.product.inventories[0]['availability'];
+                if (item.product.author['name'].length > 0) {
+                  vendor = item.product.author['name'];
+                }
+                else {
+                  vendor = "Vendor not found";
+                }
+                if (item.product.inventories[0]['currency'].length > 0) {
+                  currency = item.product.inventories[0]['currency'];
+                }
+                else {
+                  currency = "Currency not found";
+                }
+                $("<td/>").attr({class: "span2"}).append(thing + " " + "Currency\/Price: " + currency + "\/" + price + "\n" + vendor + " " + stock + '<a href="' + linkTo + '"><div class="btn btn-small">Link</div></a>').appendTo("tr:last");
+              }
+              else
+              {
+                $("<td/>").attr({class: "span2"}).appendTo("tr:last");
+              }
+            $("<tr/>").appendTo("table");
+          });
+      }
+    )
+    
+    };
+  </script>
+
+</head>
+<body>
+
+<div data-role="collapsible">
+  <form name="productInfo">
+    <label>Product Search</label>
+    <input type="text" name="isbn" id="isbn"/>
+    <label>Price sort</label>
+    <select name="sort">
+            <option value="ascending" selected>lo to hi</option>
+            <option value="descending">hi to lo</option>
+        </select>
+    <br />
+    <div data-role="fieldcontain">
+    <input type="range" name="slider-3" id="slider-3" value="50" min="0" max="100" data-handle-min="10" data-handle-max="55" data-range-theme="b" />
+    <input class="btn" type="button" value="Search" onclick="query()" >
+    </div>
+  </form>
+</div>
+
+<div data-role="collapsible">
+  <table class="table table-striped table-bordered">
+    <tr>
+      
+    </tr>
+  </table>
+</div>
+
+<div data-role="footer" data-id="foo1" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="footer-persist-a.html" class="ui-btn-active ui-state-persist">Friends</a></li>
+				<li><a href="footer-persist-b.html">Albums</a></li>
+				<li><a href="footer-persist-c.html">Emails</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</body>
+</html>

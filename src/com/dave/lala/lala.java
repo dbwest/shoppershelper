@@ -19,12 +19,10 @@
 
 package com.dave.lala;
 
-import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.DroidGap;
-import org.apache.cordova.api.CordovaInterface;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 
 public class lala extends DroidGap
@@ -35,4 +33,9 @@ public class lala extends DroidGap
         super.onCreate(savedInstanceState);
         super.loadUrl("file:///android_asset/www/index.html");
     }
+    
+//    protected void onResume(Bundle savedInstanceState)
+//    {
+//    	super.loadUrl("javascript:window.location.reload();");
+//    }
 }
