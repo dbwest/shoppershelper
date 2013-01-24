@@ -4,4 +4,4 @@ Assuming you use Eclipse
 3. Hook up a phone after turning on debugging for developers
 4. Send over USB to the phone
 
-Not working? Edit figure it out and edit this readme or post in issues.
+Not working? Figure it out and edit this readme or post in issues.
